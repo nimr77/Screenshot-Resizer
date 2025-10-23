@@ -1,0 +1,177 @@
+#!/usr/bin/env python3
+"""
+iPhone Screenshot Resizer
+Resizes images to fit various iPhone display resolutions for App Store submissions.
+"""
+
+import os
+import sys
+from PIL import Image
+import inquirer
+
+
+# Define iPhone resolutions with both portrait and landscape orientations
+IPHONE_RESOLUTIONS = {
+    "iPhone 6.5\" - Portrait (1242 × 2688)": (1242, 2688),
+    "iPhone 6.5\" - Landscape (2688 × 1242)": (2688, 1242),
+    "iPhone 6.7\" - Portrait (1284 × 2778)": (1284, 2778),
+    "iPhone 6.7\" - Landscape (2778 × 1284)": (2778, 1284),
+    "iPhone 6.9\" - Portrait (1320 × 2868)": (1320, 2868),
+    "iPhone 6.9\" - Landscape (2868 × 1320)": (2868, 1320),
+    "iPhone 5.5\" - Portrait (1242 × 2208)": (1242, 2208),
+    "iPhone 5.5\" - Landscape (2208 × 1242)": (2208, 1242),
+}
+
+
+def get_image_files(folder_path):
+    """Get all image files from the specified folder."""
+    supported_formats = ('.png', '.jpg', '.jpeg', '.PNG', '.JPG', '.JPEG')
+    image_files = []
+    
+    if not os.path.exists(folder_path):
+        print(f"Error: Folder '{folder_path}' does not exist.")
+        return []
+    
+    for filename in os.listdir(folder_path):
+        if filename.endswith(supported_formats):
+            image_files.append(os.path.join(folder_path, filename))
+    
+    return image_files
+
+
+def resize_image(image_path, target_size, output_folder, resolution_name):
+    """
+    Resize an image to fit the target resolution.
+    Uses LANCZOS resampling for high-quality results.
+    """
+    try:
+        with Image.open(image_path) as img:
+            # Get original dimensions
+            original_width, original_height = img.size
+            target_width, target_height = target_size
+            
+            # Calculate aspect ratios
+            original_ratio = original_width / original_height
+            target_ratio = target_width / target_height
+            
+            # Determine if we should fit or cover
+            # Fit: image fits entirely within target dimensions (may have padding)
+            # Cover: image covers entire target dimensions (may crop)
+            
+            # Using 'contain' approach - resize to fit within bounds, maintaining aspect ratio
+            if original_ratio > target_ratio:
+                # Image is wider than target
+                new_width = target_width
+                new_height = int(target_width / original_ratio)
+            else:
+                # Image is taller than target
+                new_height = target_height
+                new_width = int(target_height * original_ratio)
+            
+            # Resize the image
+            resized_img = img.resize((new_width, new_height), Image.LANCZOS)
+            
+            # Create a new image with the target size and paste the resized image
+            # Using white background
+            final_img = Image.new('RGB', target_size, (255, 255, 255))
+            
+            # Calculate position to center the resized image
+            x_offset = (target_width - new_width) // 2
+            y_offset = (target_height - new_height) // 2
+            
+            # Paste the resized image onto the background
+            if resized_img.mode == 'RGBA':
+                final_img.paste(resized_img, (x_offset, y_offset), resized_img)
+            else:
+                final_img.paste(resized_img, (x_offset, y_offset))
+            
+            # Save the final image
+            base_name = os.path.splitext(os.path.basename(image_path))[0]
+            output_filename = f"{base_name}_{target_width}x{target_height}.png"
+            output_path = os.path.join(output_folder, output_filename)
+            
+            final_img.save(output_path, 'PNG', quality=100)
+            print(f"  ✓ Created: {output_filename}")
+            
+    except Exception as e:
+        print(f"  ✗ Error processing {os.path.basename(image_path)}: {str(e)}")
+
+
+def main():
+    """Main function to run the screenshot resizer."""
+    print("=" * 60)
+    print("iPhone Screenshot Resizer".center(60))
+    print("=" * 60)
+    print()
+    
+    # Get input folder
+    input_folder = input("Enter the path to the folder containing screenshots: ").strip()
+    
+    if not os.path.isdir(input_folder):
+        print(f"Error: '{input_folder}' is not a valid directory.")
+        sys.exit(1)
+    
+    # Get image files
+    image_files = get_image_files(input_folder)
+    
+    if not image_files:
+        print(f"No image files found in '{input_folder}'")
+        sys.exit(1)
+    
+    print(f"\nFound {len(image_files)} image(s) to process.")
+    print()
+    
+    # Prompt user to select iPhone resolutions using checkboxes
+    questions = [
+        inquirer.Checkbox(
+            'resolutions',
+            message="Select iPhone resolutions (use spacebar to select, enter to confirm)",
+            choices=list(IPHONE_RESOLUTIONS.keys()),
+        ),
+    ]
+    
+    answers = inquirer.prompt(questions)
+    
+    if not answers or not answers['resolutions']:
+        print("No resolutions selected. Exiting.")
+        sys.exit(0)
+    
+    selected_resolutions = answers['resolutions']
+    
+    # Create output folder
+    output_folder = os.path.join(input_folder, "resized_screenshots")
+    os.makedirs(output_folder, exist_ok=True)
+    
+    print(f"\nOutput folder: {output_folder}")
+    print()
+    
+    # Process each image for each selected resolution
+    total_images = len(image_files) * len(selected_resolutions)
+    current = 0
+    
+    for resolution_name in selected_resolutions:
+        target_size = IPHONE_RESOLUTIONS[resolution_name]
+        print(f"Processing for {resolution_name}...")
+        
+        for image_path in image_files:
+            current += 1
+            resize_image(image_path, target_size, output_folder, resolution_name)
+    
+    print()
+    print("=" * 60)
+    print(f"✓ Successfully processed {len(image_files)} image(s)")
+    print(f"✓ Created {total_images} resized screenshot(s)")
+    print(f"✓ Output location: {output_folder}")
+    print("=" * 60)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n\nOperation cancelled by user.")
+        sys.exit(0)
+    except Exception as e:
+        print(f"\nAn error occurred: {str(e)}")
+        sys.exit(1)
+
