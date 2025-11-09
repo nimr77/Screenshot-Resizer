@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-iPhone Screenshot Resizer
-Resizes images to fit various iPhone display resolutions for App Store submissions.
+iPhone & iPad Screenshot Resizer
+Resizes images to fit various iPhone and iPad display resolutions for App Store submissions.
 """
 
 import os
@@ -20,6 +20,18 @@ IPHONE_RESOLUTIONS = {
     "iPhone 6.9\" - Landscape (2868 × 1320)": (2868, 1320),
     "iPhone 5.5\" - Portrait (1242 × 2208)": (1242, 2208),
     "iPhone 5.5\" - Landscape (2208 × 1242)": (2208, 1242),
+}
+
+# Define iPad resolutions with both portrait and landscape orientations
+IPAD_RESOLUTIONS = {
+    "iPad Pro 13\" - Portrait (2064 × 2752)": (2064, 2752),
+    "iPad Pro 13\" - Landscape (2752 × 2064)": (2752, 2064),
+    "iPad Pro 12.9\" - Portrait (2048 × 2732)": (2048, 2732),
+    "iPad Pro 12.9\" - Landscape (2732 × 2048)": (2732, 2048),
+    "iPad Pro 11\" - Portrait (1668 × 2388)": (1668, 2388),
+    "iPad Pro 11\" - Landscape (2388 × 1668)": (2388, 1668),
+    "iPad 10.9\" - Portrait (1640 × 2360)": (1640, 2360),
+    "iPad 10.9\" - Landscape (2360 × 1640)": (2360, 1640),
 }
 
 
@@ -100,7 +112,7 @@ def resize_image(image_path, target_size, output_folder, resolution_name):
 def main():
     """Main function to run the screenshot resizer."""
     print("=" * 60)
-    print("iPhone Screenshot Resizer".center(60))
+    print("iPhone & iPad Screenshot Resizer".center(60))
     print("=" * 60)
     print()
     
@@ -121,16 +133,39 @@ def main():
     print(f"\nFound {len(image_files)} image(s) to process.")
     print()
     
-    # Prompt user to select iPhone resolutions using checkboxes
-    questions = [
+    # Prompt user to select device type
+    device_questions = [
         inquirer.Checkbox(
-            'resolutions',
-            message="Select iPhone resolutions (use spacebar to select, enter to confirm)",
-            choices=list(IPHONE_RESOLUTIONS.keys()),
+            'device_types',
+            message="Select device types (use spacebar to select, enter to confirm)",
+            choices=['iPhone', 'iPad'],
+            default=['iPhone'],
         ),
     ]
     
-    answers = inquirer.prompt(questions)
+    device_answers = inquirer.prompt(device_questions)
+    
+    if not device_answers or not device_answers['device_types']:
+        print("No device types selected. Exiting.")
+        sys.exit(0)
+    
+    # Combine resolutions based on selected device types
+    available_resolutions = {}
+    if 'iPhone' in device_answers['device_types']:
+        available_resolutions.update(IPHONE_RESOLUTIONS)
+    if 'iPad' in device_answers['device_types']:
+        available_resolutions.update(IPAD_RESOLUTIONS)
+    
+    # Prompt user to select resolutions using checkboxes
+    resolution_questions = [
+        inquirer.Checkbox(
+            'resolutions',
+            message="Select resolutions (use spacebar to select, enter to confirm)",
+            choices=list(available_resolutions.keys()),
+        ),
+    ]
+    
+    answers = inquirer.prompt(resolution_questions)
     
     if not answers or not answers['resolutions']:
         print("No resolutions selected. Exiting.")
@@ -150,7 +185,7 @@ def main():
     current = 0
     
     for resolution_name in selected_resolutions:
-        target_size = IPHONE_RESOLUTIONS[resolution_name]
+        target_size = available_resolutions[resolution_name]
         print(f"Processing for {resolution_name}...")
         
         for image_path in image_files:

@@ -1,17 +1,20 @@
-# iPhone Screenshot Resizer
+# iPhone & iPad Screenshot Resizer 🇵🇸
 
-A Python CLI tool that automatically resizes screenshots to fit various iPhone display resolutions for App Store submissions.
+A Python CLI tool that automatically resizes screenshots to fit various iPhone and iPad display resolutions for App Store submissions.
 
 ## Features
 
 - 📱 Support for multiple iPhone screen sizes (5.5", 6.5", 6.7", 6.9")
-- ✅ Interactive checkbox selection for target resolutions
+- 📱 Support for multiple iPad screen sizes (10.9", 11", 12.9", 13")
+- ✅ Interactive checkbox selection for device types and target resolutions
 - 🖼️ Batch processing of multiple images
 - 🎨 High-quality image resizing with LANCZOS algorithm
 - 📐 Maintains aspect ratio with smart padding
 - 🚀 Simple command-line interface
 
-## Supported iPhone Resolutions
+## Supported Resolutions
+
+### iPhone Resolutions
 
 | Display Size | Orientation | Resolution | Devices |
 |--------------|-------------|------------|---------|
@@ -23,6 +26,19 @@ A Python CLI tool that automatically resizes screenshots to fit various iPhone d
 | 6.9" | Landscape | 2868 × 1320px | iPhone 15/16 Pro Max |
 | 5.5" | Portrait | 1242 × 2208px | iPhone 6s Plus, 7 Plus, 8 Plus |
 | 5.5" | Landscape | 2208 × 1242px | iPhone 6s Plus, 7 Plus, 8 Plus |
+
+### iPad Resolutions
+
+| Display Size | Orientation | Resolution | Devices |
+|--------------|-------------|------------|---------|
+| 13" | Portrait | 2064 × 2752px | iPad Pro 13" (M4, 2024) |
+| 13" | Landscape | 2752 × 2064px | iPad Pro 13" (M4, 2024) |
+| 12.9" | Portrait | 2048 × 2732px | iPad Pro 12.9" (all generations) |
+| 12.9" | Landscape | 2732 × 2048px | iPad Pro 12.9" (all generations) |
+| 11" | Portrait | 1668 × 2388px | iPad Pro 11", iPad Air (4th & 5th gen) |
+| 11" | Landscape | 2388 × 1668px | iPad Pro 11", iPad Air (4th & 5th gen) |
+| 10.9" | Portrait | 1640 × 2360px | iPad Air (10th gen), iPad (10th gen) |
+| 10.9" | Landscape | 2360 × 1640px | iPad Air (10th gen), iPad (10th gen) |
 
 ## Prerequisites
 
@@ -77,27 +93,36 @@ python3 resize_screenshots.py
 ### Example
 
 ```
-iPhone Screenshot Resizer
+iPhone & iPad Screenshot Resizer
 ============================================================
 
 Enter the path to the folder containing screenshots: /path/to/screenshots
 
 Found 3 image(s) to process.
 
-? Select iPhone resolutions (use spacebar to select, enter to confirm)
- ❯ ⬢ iPhone 6.5" - Portrait (1242 × 2688)
+? Select device types (use spacebar to select, enter to confirm)
+ ❯ ◉ iPhone
+   ◉ iPad
+
+? Select resolutions (use spacebar to select, enter to confirm)
+ ❯ ◉ iPhone 6.5" - Portrait (1242 × 2688)
    ⬢ iPhone 6.5" - Landscape (2688 × 1242)
-   ⬢ iPhone 6.7" - Portrait (1284 × 2778)
-   ⬢ iPhone 6.7" - Landscape (2778 × 1284)
+   ◉ iPad Pro 12.9" - Portrait (2048 × 2732)
+   ⬢ iPad Pro 12.9" - Landscape (2732 × 2048)
 
 Processing for iPhone 6.5" - Portrait (1242 × 2688)...
   ✓ Created: screenshot1_1242x2688.png
   ✓ Created: screenshot2_1242x2688.png
   ✓ Created: screenshot3_1242x2688.png
 
+Processing for iPad Pro 12.9" - Portrait (2048 × 2732)...
+  ✓ Created: screenshot1_2048x2732.png
+  ✓ Created: screenshot2_2048x2732.png
+  ✓ Created: screenshot3_2048x2732.png
+
 ============================================================
 ✓ Successfully processed 3 image(s)
-✓ Created 3 resized screenshot(s)
+✓ Created 6 resized screenshot(s)
 ✓ Output location: /path/to/screenshots/resized_screenshots
 ============================================================
 ```
@@ -105,12 +130,13 @@ Processing for iPhone 6.5" - Portrait (1242 × 2688)...
 ## How It Works
 
 1. **Image Detection**: Scans the input folder for PNG, JPG, and JPEG files
-2. **Resolution Selection**: Presents an interactive checkbox menu to select target resolutions
-3. **Smart Resizing**: 
+2. **Device Selection**: Choose between iPhone and/or iPad device types
+3. **Resolution Selection**: Presents an interactive checkbox menu to select target resolutions for chosen device types
+4. **Smart Resizing**: 
    - Maintains the original aspect ratio
    - Adds white padding if needed to fit exact dimensions
    - Uses high-quality LANCZOS resampling
-4. **Output**: Saves resized images with descriptive filenames in a dedicated output folder
+5. **Output**: Saves resized images with descriptive filenames in a dedicated output folder
 
 ## Output File Naming
 
@@ -157,5 +183,5 @@ Suggestions and improvements are welcome! Feel free to open an issue or submit a
 
 ## Author
 
-Created for easy iPhone screenshot management for App Store submissions.
+Created for easy iPhone and iPad screenshot management for App Store submissions.
 
