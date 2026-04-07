@@ -1,11 +1,12 @@
-# iPhone & iPad Screenshot Resizer 🇵🇸
+# iPhone, iPad & Mac Screenshot Resizer 🇵🇸
 
-A Python CLI tool that automatically resizes screenshots to fit various iPhone and iPad display resolutions for App Store submissions.
+A Python CLI tool that automatically resizes screenshots to fit various iPhone, iPad, and Mac display resolutions for App Store submissions.
 
 ## Features
 
 - 📱 Support for multiple iPhone screen sizes (5.5", 6.5", 6.7", 6.9")
 - 📱 Support for multiple iPad screen sizes (10.9", 11", 12.9", 13")
+- 💻 Support for Mac displays (iMac, MacBook Pro, MacBook Air)
 - ✅ Interactive checkbox selection for device types and target resolutions
 - 🖼️ Batch processing of multiple images
 - 🎨 High-quality image resizing with LANCZOS algorithm
@@ -39,6 +40,19 @@ A Python CLI tool that automatically resizes screenshots to fit various iPhone a
 | 11" | Landscape | 2388 × 1668px | iPad Pro 11", iPad Air (4th & 5th gen) |
 | 10.9" | Portrait | 1640 × 2360px | iPad Air (10th gen), iPad (10th gen) |
 | 10.9" | Landscape | 2360 × 1640px | iPad Air (10th gen), iPad (10th gen) |
+
+### Mac Resolutions
+
+| Display Type | Resolution | Devices |
+|--------------|------------|---------|
+| 27" 5K iMac | 5120 × 2880px | iMac 27" 5K Retina |
+| 24" 4.5K iMac | 4480 × 2520px | iMac 24" 4.5K (M1, M3) |
+| 16" MacBook Pro | 3456 × 2234px | MacBook Pro 16" (M1/M2/M3 Pro/Max) |
+| 15" MacBook Pro | 2880 × 1800px | MacBook Pro 15" Retina |
+| 14" MacBook Pro | 3024 × 1964px | MacBook Pro 14" (M1/M2/M3 Pro/Max) |
+| 13" MacBook | 2560 × 1600px | MacBook Pro 13", MacBook Air 13" Retina |
+| Standard HD | 1440 × 900px | Standard resolution displays |
+| Minimum | 1280 × 800px | Minimum App Store requirement |
 
 ## Prerequisites
 
@@ -93,7 +107,7 @@ python3 resize_screenshots.py
 ### Example
 
 ```
-iPhone & iPad Screenshot Resizer
+iPhone, iPad & Mac Screenshot Resizer
 ============================================================
 
 Enter the path to the folder containing screenshots: /path/to/screenshots
@@ -103,12 +117,14 @@ Found 3 image(s) to process.
 ? Select device types (use spacebar to select, enter to confirm)
  ❯ ◉ iPhone
    ◉ iPad
+   ◉ Mac
 
 ? Select resolutions (use spacebar to select, enter to confirm)
  ❯ ◉ iPhone 6.5" - Portrait (1242 × 2688)
    ⬢ iPhone 6.5" - Landscape (2688 × 1242)
    ◉ iPad Pro 12.9" - Portrait (2048 × 2732)
    ⬢ iPad Pro 12.9" - Landscape (2732 × 2048)
+   ◉ Mac 27" 5K iMac (5120 × 2880)
 
 Processing for iPhone 6.5" - Portrait (1242 × 2688)...
   ✓ Created: screenshot1_1242x2688.png
@@ -130,7 +146,7 @@ Processing for iPad Pro 12.9" - Portrait (2048 × 2732)...
 ## How It Works
 
 1. **Image Detection**: Scans the input folder for PNG, JPG, and JPEG files
-2. **Device Selection**: Choose between iPhone and/or iPad device types
+2. **Device Selection**: Choose between iPhone, iPad, and/or Mac device types
 3. **Resolution Selection**: Presents an interactive checkbox menu to select target resolutions for chosen device types
 4. **Smart Resizing**: 
    - Maintains the original aspect ratio
@@ -183,5 +199,5 @@ Suggestions and improvements are welcome! Feel free to open an issue or submit a
 
 ## Author
 
-Created for easy iPhone and iPad screenshot management for App Store submissions.
+Created for easy iPhone, iPad, and Mac screenshot management for App Store submissions.
 

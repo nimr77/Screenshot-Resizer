@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-iPhone & iPad Screenshot Resizer
-Resizes images to fit various iPhone and iPad display resolutions for App Store submissions.
+iPhone, iPad & Mac Screenshot Resizer
+Resizes images to fit various iPhone, iPad, and Mac display resolutions for App Store submissions.
 """
 
 import os
@@ -32,6 +32,18 @@ IPAD_RESOLUTIONS = {
     "iPad Pro 11\" - Landscape (2388 × 1668)": (2388, 1668),
     "iPad 10.9\" - Portrait (1640 × 2360)": (1640, 2360),
     "iPad 10.9\" - Landscape (2360 × 1640)": (2360, 1640),
+}
+
+# Define Mac resolutions for macOS App Store screenshots
+MAC_RESOLUTIONS = {
+    "Mac 27\" 5K iMac (5120 × 2880)": (5120, 2880),
+    "Mac 24\" 4.5K iMac (4480 × 2520)": (4480, 2520),
+    "Mac 16\" MacBook Pro Retina (3456 × 2234)": (3456, 2234),
+    "Mac 15\" MacBook Pro Retina (2880 × 1800)": (2880, 1800),
+    "Mac 14\" MacBook Pro Retina (3024 × 1964)": (3024, 1964),
+    "Mac 13\" MacBook Retina (2560 × 1600)": (2560, 1600),
+    "Mac Standard HD (1440 × 900)": (1440, 900),
+    "Mac Minimum (1280 × 800)": (1280, 800),
 }
 
 
@@ -112,7 +124,7 @@ def resize_image(image_path, target_size, output_folder, resolution_name):
 def main():
     """Main function to run the screenshot resizer."""
     print("=" * 60)
-    print("iPhone & iPad Screenshot Resizer".center(60))
+    print("iPhone, iPad & Mac Screenshot Resizer".center(60))
     print("=" * 60)
     print()
     
@@ -138,7 +150,7 @@ def main():
         inquirer.Checkbox(
             'device_types',
             message="Select device types (use spacebar to select, enter to confirm)",
-            choices=['iPhone', 'iPad'],
+            choices=['iPhone', 'iPad', 'Mac'],
             default=['iPhone'],
         ),
     ]
@@ -155,6 +167,8 @@ def main():
         available_resolutions.update(IPHONE_RESOLUTIONS)
     if 'iPad' in device_answers['device_types']:
         available_resolutions.update(IPAD_RESOLUTIONS)
+    if 'Mac' in device_answers['device_types']:
+        available_resolutions.update(MAC_RESOLUTIONS)
     
     # Prompt user to select resolutions using checkboxes
     resolution_questions = [
